@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +28,7 @@ public class FileServiceImpl implements FileService{
 		// full path
 		
 		String randomId = UUID.randomUUID().toString();
-		String fullPath = path+File.separator+randomId+name;
+		String fullPath = path+File.separator+randomId+"."+FilenameUtils.getExtension(name);
 		
 		
 		// create folder if not created
@@ -42,7 +43,7 @@ public class FileServiceImpl implements FileService{
 		
 		
 		
-		return name;
+		return randomId+"."+FilenameUtils.getExtension(name);
 	}
 
 	@Override

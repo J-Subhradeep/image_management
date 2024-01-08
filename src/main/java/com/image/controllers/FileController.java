@@ -26,42 +26,33 @@ import com.image.services.FileService;
 @RequestMapping("/file")
 public class FileController {
 
-	
 	@Autowired
 	private FileService fileService;
-	
-	
+
 	@Value("${project.image}")
 	private String path;
-	
-	
-	
+
 	@PostMapping("/upload")
 	public ResponseEntity<FileResponse> fileUpload(
-			
-			@RequestParam("image") MultipartFile image
-			){
+
+			@RequestParam("file") MultipartFile image) {
 		String uploadImage;
 		try {
 			uploadImage = this.fileService.uploadImage(path, image);
 		} catch (Exception e) {
-			return new ResponseEntity<FileResponse>(new FileResponse(null,"Error"),HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<FileResponse>(new FileResponse(null, "Error"), HttpStatus.INTERNAL_SERVER_ERROR);
 			// TODO Auto-generated catch block
-			
+
 		}
-		return new ResponseEntity<FileResponse>(new FileResponse(uploadImage,"Successful"),HttpStatus.OK);
+		return new ResponseEntity<FileResponse>(new FileResponse(uploadImage, "Successful"), HttpStatus.OK);
 	}
-	
-	
-	
-	@GetMapping(value = "/images/{imageName}", produces = MediaType.IMAGE_PNG_VALUE)
-	public void downloadImage(
-			@PathVariable("imageName") String imageName,
-			HttpServletResponse response
-			) throws IOException {
-		
+
+	@GetMapping(value = "/get/{imageName}", produces = MediaType.ALL_VALUE)
+	public void downloadImage(@PathVariable("imageName") String imageName, HttpServletResponse response)
+			throws IOException {
+
 		InputStream resource = this.fileService.getResource(path, imageName);
-		response.setContentType(MediaType.IMAGE_PNG_VALUE);
+		response.setContentType(MediaType.ALL_VALUE);
 		StreamUtils.copy(resource, response.getOutputStream());
 	}
 }
